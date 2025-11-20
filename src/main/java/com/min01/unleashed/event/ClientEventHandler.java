@@ -98,6 +98,7 @@ public class ClientEventHandler
     	event.registerEntityRenderer(UnleashedEntities.CELESTIAL_BEAM.get(), CelestialBeamRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.CAMERA_SHAKE.get(), NoneRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.WORMHOLE.get(), NoneRenderer::new);
+    	event.registerEntityRenderer(UnleashedEntities.BLACKHOLE.get(), NoneRenderer::new);
     }
     
 	@SuppressWarnings("unchecked")

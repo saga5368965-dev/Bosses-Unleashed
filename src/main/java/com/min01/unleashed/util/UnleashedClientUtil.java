@@ -35,6 +35,24 @@ public class UnleashedClientUtil
 		head.xRot += Math.toRadians(headPitch);
 	}
 	
+	public static void applyBlackhole(PoseStack mtx, float frameTime, float tickCount)
+	{
+		Minecraft minecraft = UnleashedClientUtil.MC;
+
+		ExtendedPostChain shaderChain = UnleashedShaders.getBlackhole();
+		EffectInstance shader = shaderChain.getMainShader();
+
+		if(shader != null)
+		{
+			shader.setSampler("ImageSampler", () -> minecraft.getTextureManager().getTexture(new ResourceLocation(BossesUnleashed.MODID, "textures/misc/blue_noise.png")).getId());
+			shader.safeGetUniform("iResolution").set(minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
+			shader.safeGetUniform("InverseTransformMatrix").set(getInverseTransformMatrix(INVERSE_MAT, mtx.last().pose()));
+			shader.safeGetUniform("iTime").set(tickCount / 20.0F);
+			shaderChain.process(frameTime);
+			minecraft.getMainRenderTarget().bindWrite(false);
+		}
+	}
+	
 	public static void applyWormhole(PoseStack mtx, float frameTime)
 	{
 		Minecraft minecraft = UnleashedClientUtil.MC;

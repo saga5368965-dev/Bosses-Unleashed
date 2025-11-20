@@ -76,6 +76,12 @@ public class MixinLevelRenderer
 				mtx.translate(pos.x, pos.y + effect.getOffset(), pos.z);
 				UnleashedClientUtil.applyWormhole(mtx, frameTime);
 			}
+			else if(effect.getEffetName().equals("Blackhole"))
+			{
+				Vec3 pos = effect.getEffectPosition(entity).subtract(camPos);
+				mtx.translate(pos.x, pos.y, pos.z);
+				UnleashedClientUtil.applyBlackhole(mtx, frameTime, effect.getEffectTickCount());
+			}
 			mtx.popPose();
 		}
 		if(camera.getEntity() != null)

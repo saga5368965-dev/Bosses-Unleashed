@@ -245,11 +245,20 @@ public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJe
 	{
 		this.entity = entity;
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		UnleashedClientUtil.animateHead(this.root, netHeadYaw, headPitch + 90.0F);
+		boolean isHitTime = entity.isHitTime();
+		boolean isFirstPhase = !entity.isAlive() && !entity.isSecondPhase();
+		if(!isHitTime && entity.isAlive())
+		{
+			UnleashedClientUtil.animateHead(this.root, netHeadYaw, headPitch + 90.0F);
+		}
 		entity.swimAnimationState.animate(this, CelestialJellyfishAnimation.JELLYFISH_SWIM, ageInTicks);
 		this.root.visible = entity.isVisible();
 		this.top_umbrella.visible = !entity.isFinalPhase();
-		if(entity.isHitTime())
+		if(isFirstPhase)
+		{
+			this.root.xRot = -45.0F;
+		}
+		if(isHitTime)
 		{
 			this.root.y -= 95;
 		}

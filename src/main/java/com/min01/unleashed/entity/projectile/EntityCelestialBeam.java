@@ -51,7 +51,11 @@ public class EntityCelestialBeam extends AbstractOwnableEntity<EntityCelestialJe
 		{
 			t.hurt(this.damageSources().indirectMagic(this, this.getOwner()), 6.0F);
 		});
-		if(this.tickCount >= 500 || this.getOwner() == null)
+		if(this.getOwner() == null || !this.getOwner().isAlive())
+		{
+			this.discard();
+		}
+		if(this.tickCount >= 1000)
 		{
 			this.discard();
 		}

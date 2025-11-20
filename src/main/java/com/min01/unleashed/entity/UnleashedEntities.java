@@ -23,6 +23,7 @@ public class UnleashedEntities
 	public static final RegistryObject<EntityType<EntityCelestialBeam>> CELESTIAL_BEAM = registerEntity("celestial_beam", createBuilder(EntityCelestialBeam::new, MobCategory.MISC).sized(0.1F, 0.1F).updateInterval(1));
 	public static final RegistryObject<EntityType<EntityCameraShake>> CAMERA_SHAKE = registerEntity("camera_shake", EntityType.Builder.<EntityCameraShake>of(EntityCameraShake::new, MobCategory.MISC).sized(0.0F, 0.0F));
 	public static final RegistryObject<EntityType<EntityWormhole>> WORMHOLE = registerEntity("wormhole", createBuilder(EntityWormhole::new, MobCategory.MISC).sized(3.0F, 3.0F).clientTrackingRange(100));
+	public static final RegistryObject<EntityType<EntityBlackhole>> BLACKHOLE = registerEntity("blackhole", createBuilder(EntityBlackhole::new, MobCategory.MISC).sized(5.0F, 5.0F).clientTrackingRange(100));
 	
 	public static <T extends Entity> EntityType.Builder<T> createBuilder(EntityType.EntityFactory<T> factory, MobCategory category)
 	{

@@ -7,7 +7,6 @@ import com.min01.unleashed.entity.UnleashedEntities;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem.Type;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -23,7 +22,7 @@ public class UnleashedItems
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BossesUnleashed.MODID);
 	
 	public static final RegistryObject<Item> CELESTIAL_CORE = ITEMS.register("celestial_core", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-	public static final RegistryObject<Item> CELESTIAL_JELLY = ITEMS.register("celestial_jelly", () -> new Item(new Item.Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(1).saturationMod(0.8F).alwaysEat().fast().build())));
+	public static final RegistryObject<Item> CELESTIAL_JELLY = ITEMS.register("celestial_jelly", () -> new CelestialJellyItem());
 	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_UMBRELLA = ITEMS.register("celestial_jellyfish_umbrella", () -> new CelestialJellyfishUmbrellaItem());
 	
 	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_MASK = ITEMS.register("celestial_jellyfish_mask", () -> new CelestialJellyfishArmorItem(Type.HELMET));

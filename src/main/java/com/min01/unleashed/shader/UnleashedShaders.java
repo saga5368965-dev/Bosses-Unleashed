@@ -18,6 +18,7 @@ public class UnleashedShaders implements ResourceManagerReloadListener
 	protected static ExtendedPostChain GALAXY;
 	protected static ExtendedPostChain STARFIELD;
 	protected static ExtendedPostChain WORMHOLE;
+	protected static ExtendedPostChain BLACKHOLE;
 
 	@Override
 	public void onResourceManagerReload(ResourceManager manager)
@@ -39,6 +40,7 @@ public class UnleashedShaders implements ResourceManagerReloadListener
 		GALAXY = add(new ExtendedPostChain(BossesUnleashed.MODID, "galaxy"));
 		STARFIELD = add(new ExtendedPostChain(BossesUnleashed.MODID, "starfield"));
 		WORMHOLE = add(new ExtendedPostChain(BossesUnleashed.MODID, "wormhole"));
+		BLACKHOLE = add(new ExtendedPostChain(BossesUnleashed.MODID, "blackhole"));
 	}
 
 	public void clear()
@@ -71,5 +73,10 @@ public class UnleashedShaders implements ResourceManagerReloadListener
 	public static ExtendedPostChain getWormhole() 
 	{
 		return WORMHOLE;
+	}
+	
+	public static ExtendedPostChain getBlackhole() 
+	{
+		return BLACKHOLE;
 	}
 }

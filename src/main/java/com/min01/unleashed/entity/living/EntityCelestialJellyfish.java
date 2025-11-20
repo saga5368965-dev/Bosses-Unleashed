@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.min01.unleashed.entity.AbstractAnimatableFlyingMonster;
+import com.min01.unleashed.entity.EntityBlackhole;
 import com.min01.unleashed.entity.EntityCameraShake;
 import com.min01.unleashed.entity.EntityWormhole;
 import com.min01.unleashed.entity.IShaderEffect;
@@ -57,6 +58,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
@@ -217,14 +219,12 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		{
     			if(this.isAlive())
     			{
+        			this.setYBodyRot(0.0F);
+        			this.setYRot(0.0F);
         			if(this.getHitTime() > 0)
         			{
         				this.setDeltaMovement(Vec3.ZERO);
             			this.setHitTime(this.getHitTime() - 1);
-            			this.setXRot(-90.0F);
-            			this.setYHeadRot(0.0F);
-            			this.setYBodyRot(0.0F);
-            			this.setYRot(0.0F);
             			this.setDeltaMovement(Vec3.ZERO.subtract(0.0F, 0.01F, 0.0F));
             			if(this.tickCount % 40 == 0 && !this.entityData.get(IS_USING_SKILL))
             			{
@@ -253,7 +253,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		{
         			if(this.getLastLookPos().equals(Vec3.ZERO))
         			{
-        				if(this.getAnimationState() != 0)
+        				if(this.isAlive())
         				{
                 			this.lookAt(Anchor.EYES, this.getTarget().getEyePosition());
         				}
@@ -310,8 +310,8 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	}
     	if(this.isFinalPhase())
     	{
-    		int tick = 500 - this.getHitTime();
-    		tick /= 10;
+    		int tick = this.getHitTime();
+    		tick /= 20;
     		tick = Math.max(tick, 1);
     		if(this.tickCount % tick == 0)
     		{
@@ -319,13 +319,39 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			beam.setPos(this.getEyePosition());
     			beam.setOwner(this);
     			beam.setYaw(this.random.nextFloat() * 360.0F);
-    			beam.setPitch(Mth.clamp(this.random.nextFloat() * 360.0F, -45.0F, 65.0F));
+    			beam.setPitch(this.random.nextFloat() * 45.0F);
     			this.level.addFreshEntity(beam);
+    			float strength = 500 - this.getHitTime();
+    			EntityCameraShake.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
     		}
-    		if(this.getHitTime() <= 0)
+    		if(this.hurtTime > 0)
     		{
+    			this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 5.0F, ExplosionInteraction.NONE);
     			this.setHealth(0.0F);
+    			this.setHitTime(false);
+    			this.setHitTime(0);
+    			this.setFinalPhase(false);
+    			this.spawnWormhole();
     		}
+    		else if(this.getHitTime() <= 0)
+    		{
+    			EntityBlackhole blackHole = new EntityBlackhole(UnleashedEntities.BLACKHOLE.get(), this.level);
+    			blackHole.setPos(this.position());
+    			this.level.addFreshEntity(blackHole);
+    			this.discard();
+    		}
+    	}
+    }
+    
+    public void spawnWormhole()
+    {
+    	if(this.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
+    	{
+			float yRot = this.getRandom().nextFloat() * 360.0F;
+			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getYHeadRot() + yRot), this.position(), 0, 0, this.getRandom().nextInt(10, 20));
+        	EntityWormhole wormhole = new EntityWormhole(UnleashedEntities.WORMHOLE.get(), this.level);
+        	wormhole.setPos(lookPos);
+        	this.level.addFreshEntity(wormhole);
     	}
     }
     
@@ -391,7 +417,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	    		{
 	                this.bossEvent.setVisible(true);
 	    			this.setSecondPhase(true);
-	    			this.setCanLook(true);
 	    			this.setHealth(this.getMaxHealth());
 	    			this.doTeleport();
 	    		}
@@ -418,10 +443,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		{
         		this.setStarfield(false);
         		this.setJellyfishSpawned(false);
-        		if(p_276115_ == RemovalReason.KILLED)
-        		{
-            		this.spawnWormhole();
-        		}
     		}
     	}
     	super.remove(p_276115_);
@@ -444,7 +465,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
     		this.phaseTime++;
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D / 4.0D, 0.0D));
-			this.setCanLook(false);
             this.bossEvent.setVisible(false);
     		if(this.phaseTime == 200)
     		{
@@ -452,18 +472,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.setShowEffect(true);
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
     		}
-    	}
-    }
-    
-    public void spawnWormhole()
-    {
-    	if(this.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
-    	{
-			float yRot = this.getRandom().nextFloat() * 360.0F;
-			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getYHeadRot() + yRot), this.position(), 0, 0, this.getRandom().nextInt(10, 20));
-        	EntityWormhole wormhole = new EntityWormhole(UnleashedEntities.WORMHOLE.get(), this.level);
-        	wormhole.setPos(lookPos);
-        	this.level.addFreshEntity(wormhole);
     	}
     }
     
@@ -601,26 +609,27 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     public boolean hurt(DamageSource p_21016_, float p_21017_)
     {
-    	if(p_21016_.getDirectEntity() != null && this.getAnimationState() == 0 && !this.isTransform())
-    	{
-    		this.setAnimationState(1);
-    		this.setShowEffect(true);
-    		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
-    	}
     	if(p_21016_.is(DamageTypeTags.IS_EXPLOSION))
     	{
     		return false;
     	}
     	if(!p_21016_.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
     	{
-    		if(this.isSecondPhase() && this.getHealth() - p_21017_ <= 1.0F && !this.isFinalPhase())
+        	if(p_21016_.getDirectEntity() != null && this.getAnimationState() == 0 && !this.isTransform())
+        	{
+        		this.setAnimationState(1);
+        		this.setShowEffect(true);
+        		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
+        		return false;
+        	}
+    		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone())
+    		{
+    			return false;
+    		}
+    		else if(this.isSecondPhase() && this.getHealth() - p_21017_ <= 1.0F && !this.isFinalPhase())
     		{
     			this.setHealth(1.0F);
     			this.doTeleport();
-    			return false;
-    		}
-    		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone())
-    		{
     			return false;
     		}
     	}
