@@ -63,7 +63,7 @@ vec3 render(vec2 uv, float maindepth, vec3 col, vec3 ro, vec3 rd) {
     hit = Sphere(ro, rd, 10.0);
     vec3 pos = iPlane(ro, rd, vec3(0.0), normalize(ro));
     float intensity = dot(pos, pos);
-    if(intensity > length(hit)) {
+    if(intensity > length(hit) / 2.0) {
         intensity = 1.0 / intensity;
         vec4 worldPos = vec4(hit.xyz, 1.0);
         vec4 screenPos = ProjectionMatrix * ViewMatrix * worldPos;
@@ -71,8 +71,8 @@ vec3 render(vec2 uv, float maindepth, vec3 col, vec3 ro, vec3 rd) {
         vec2 dir = 0.5 * normalize(texCoord - screencenter);
     	return texture(DiffuseSampler, texCoord - dir * intensity).rgb;
     }
+    hit = Sphere(ro, rd, 4.0);
 	if (intensity < length(hit)) {
-    	hit = Sphere(ro, rd, 2.0);
 	    vec3 dir = rd;
 		vec3 from=vec3(1.,.5,0.5);
 		//volumetric rendering

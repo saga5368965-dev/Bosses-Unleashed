@@ -152,6 +152,10 @@ public class UnleashedSavedData extends SavedData
 	
 	public ResourceKey<Level> getRespawnDimension(UUID player)
 	{
+		if(!this.respawnDimension.containsKey(player))
+		{
+			return Level.OVERWORLD;
+		}
 		return this.respawnDimension.get(player);
 	}
 	
@@ -163,6 +167,10 @@ public class UnleashedSavedData extends SavedData
 	
 	public ResourceKey<Level> getPrevDimension(UUID player)
 	{
+		if(!this.prevDimension.containsKey(player))
+		{
+			return Level.OVERWORLD;
+		}
 		return this.prevDimension.get(player);
 	}
 	
@@ -174,6 +182,10 @@ public class UnleashedSavedData extends SavedData
 	
 	public BlockPos getRespawnPos(UUID player)
 	{
+		if(!this.respawnPos.containsKey(player))
+		{
+			return BlockPos.containing(0, 64, 0);
+		}
 		return this.respawnPos.get(player);
 	}
 	
@@ -185,6 +197,10 @@ public class UnleashedSavedData extends SavedData
 	
 	public BlockPos getPrevPos(UUID player)
 	{
+		if(!this.prevPos.containsKey(player))
+		{
+			return BlockPos.containing(0, 64, 0);
+		}
 		return this.prevPos.get(player);
 	}
 }

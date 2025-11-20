@@ -90,7 +90,7 @@ public class ClientEventHandlerForge
             Component component = event.getBossEvent().getName();
             int i = UnleashedClientUtil.MC.getWindow().getGuiScaledWidth();
             int j = event.getY();
-            int progressScaled = (int)(event.getBossEvent().getProgress() * 136.0F);
+            int progressScaled = (int)(event.getBossEvent().getProgress() * 127.0F);
             int l = UnleashedClientUtil.MC.font.width(component);
             int i1 = i / 2 - l / 2;
             int j1 = j + 25;
@@ -98,7 +98,7 @@ public class ClientEventHandlerForge
             poseStack.pushPose();
             poseStack.translate(i1 / 9.5F, j - 23, 0);
             event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_FRAME_TEXTURE, event.getX(), event.getY(), 0, 0, 140, 32, 140, 32);
-            event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_BAR_TEXTURE, event.getX(), event.getY(), 0, 0, progressScaled, 32, 140, 32);
+            event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_BAR_TEXTURE, event.getX(), event.getY(), 0, 0, 9 + progressScaled, 32, 140, 32);
             poseStack.popPose();
             poseStack.pushPose();
             poseStack.translate(i1, j1, 0);

@@ -423,9 +423,9 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	    		this.setAnimationState(0);
 	    		this.setShowEffect(false);
 	    		this.setStarfield(true);
+                this.bossEvent.setVisible(true);
 	    		if(!this.isSecondPhase() && !this.isAlive())
 	    		{
-	                this.bossEvent.setVisible(true);
 	    			this.setSecondPhase(true);
 	    			this.setHealth(this.getMaxHealth());
 	    			this.doTeleport();
@@ -719,6 +719,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     {
     	super.readAdditionalSaveData(p_21450_);
     	this.setTransform(p_21450_.getBoolean("isTransform"));
+    	this.bossEvent.setVisible(p_21450_.getBoolean("isTransform"));
     	this.setShowEffect(p_21450_.getBoolean("ShowEffect"));
     	this.setVisible(p_21450_.getBoolean("isVisible"));
     	this.setShowWarning(p_21450_.getBoolean("ShowWarning"));
@@ -979,7 +980,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     {
     	this.entityData.set(IS_TRANSFORM, value);
     	this.bossEvent.setName(this.getDisplayName());
-    	this.bossEvent.setVisible(value);
     }
     
     public boolean isTransform()

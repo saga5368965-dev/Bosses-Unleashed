@@ -45,13 +45,13 @@ public class EventHandlerForge
 	public static void onEntityJoinLevel(EntityJoinLevelEvent event)
 	{
 		Level level = event.getLevel();
-		if(event.getEntity() instanceof Player player)
+		if(event.getEntity() instanceof Player player && level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
 		{
 			UnleashedSavedData data = UnleashedSavedData.get(level);
 			if(data != null)
 			{
 				UnleashedNetwork.sendToAll(new UpdateStarfieldPacket(data.isStarfield()));
-				if(level.dimension() == UnleashedWorlds.CELESTIAL_FIELD && !data.isJellyfishSpawned())
+				if(!data.isJellyfishSpawned())
 				{
 					EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), level);
 					float yRot = player.getRandom().nextFloat() * 360.0F;
@@ -83,10 +83,10 @@ public class EventHandlerForge
 	public static void onLivingDeath(LivingDeathEvent event)
 	{
 		LivingEntity entity = event.getEntity();
-		if(entity instanceof ServerPlayer player)
+		if(entity instanceof ServerPlayer player && player.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
 		{
 			UnleashedSavedData data = UnleashedSavedData.get(player.level);
-			if(data != null && data.isJellyfishSpawned() && player.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD && event.getSource().getEntity() instanceof EntityCelestialJellyfish)
+			if(data != null && data.isJellyfishSpawned() && event.getSource().getEntity() instanceof EntityCelestialJellyfish)
 			{
 				player.setRespawnPosition(UnleashedWorlds.CELESTIAL_FIELD, player.blockPosition(), player.getRespawnAngle(), player.isRespawnForced(), false);
 			}
