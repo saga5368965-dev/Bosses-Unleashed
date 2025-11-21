@@ -47,6 +47,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
@@ -58,6 +59,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.phys.Vec2;
@@ -326,11 +328,19 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.level.addFreshEntity(beam);
     			EntityCameraShake.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
     		}
-			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(10.0F), EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(t -> !(t instanceof EntityCelestialJellyfish) && !t.isAlliedTo(this)));
+			List<Entity> list = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(30.0F), this::canPush);
 			list.forEach(t -> 
 			{
-				Vec3 motion = UnleashedUtil.fromToVector(this.position(), t.position(), Math.max(0.05F - (strength * 0.0001F), 0.0F));
-				t.push(motion.x, motion.y, motion.z);
+				if(t instanceof Projectile)
+				{
+					Vec3 motion = UnleashedUtil.fromToVector(this.position(), t.position(), 0.6F);
+					t.addDeltaMovement(motion);
+				}
+				else
+				{
+					Vec3 motion = UnleashedUtil.fromToVector(this.position(), t.position(), Math.max(0.05F - (strength * 0.0001F), 0.0F));
+					t.push(motion.x, motion.y, motion.z);
+				}
 	    		if(t instanceof ServerPlayer player)
 	    		{
 	    			player.connection.send(new ClientboundSetEntityMotionPacket(t));
@@ -355,6 +365,15 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.discard();
     		}
     	}
+    }
+    
+    public boolean canPush(Entity entity)
+    {
+    	if(entity instanceof Player player)
+    	{
+    		return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player);
+    	}
+    	return entity instanceof Projectile projectile && !(projectile.getOwner() instanceof EntityCelestialJellyfish);
     }
     
     @Override

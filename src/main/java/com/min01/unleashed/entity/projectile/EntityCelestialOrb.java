@@ -70,7 +70,7 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 					}
 					if(!jellyfish.isSecondPhase() && !jellyfish.isAlive())
 					{
-						if(this.distanceToXZ(jellyfish) <= 2.5F)
+						if(this.distanceToXZ(jellyfish) <= 3.0F)
 						{
 							this.discard();
 						}
@@ -85,7 +85,7 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 					}
 				}
 			}
-			if(this.tickCount >= 350)
+			if(this.tickCount >= 300 || this.touchingUnloadedChunk())
 			{
 				this.discard();
 			}
@@ -104,10 +104,6 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 				{
 					t.hurt(this.damageSources().explosion(this, this.getOwner()), 20.0F);
 				});
-				this.discard();
-			}
-			if(this.tickCount >= 200)
-			{
 				this.discard();
 			}
 		}

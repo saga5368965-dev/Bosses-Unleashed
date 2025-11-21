@@ -6,6 +6,7 @@ import java.util.List;
 import com.min01.unleashed.network.AddShaderEffectPacket;
 import com.min01.unleashed.network.UnleashedNetwork;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,20 +18,22 @@ public class UnleashedShaderEffects
 	{
 		if(!level.isClientSide)
 		{
-			UnleashedNetwork.sendToAll(new AddShaderEffectPacket(name, pos, lifeTime, scale));
+			UnleashedNetwork.sendToAll(new AddShaderEffectPacket(level.dimension(), name, pos, lifeTime, scale));
 		}
 	}
 	
 	public static class ShaderEffect
 	{
+		public final ResourceKey<Level> dimension;
 		public final String name;
 		public final Vec3 pos;
 		public final int lifeTime;
 		public final float scale;
 		public int tickCount;
 		
-		public ShaderEffect(String name, Vec3 pos, int lifeTime, float scale) 
+		public ShaderEffect(ResourceKey<Level> dimension, String name, Vec3 pos, int lifeTime, float scale) 
 		{
+			this.dimension = dimension;
 			this.name = name;
 			this.pos = pos;
 			this.lifeTime = lifeTime;

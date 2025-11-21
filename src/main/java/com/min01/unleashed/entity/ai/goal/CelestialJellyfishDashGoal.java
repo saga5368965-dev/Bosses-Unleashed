@@ -41,6 +41,11 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	@Override
 	public boolean canContinueToUse()
 	{
+		if(this.mob.getTarget() == null || !this.mob.getTarget().isAlive() || !this.mob.isAlive())
+		{
+			this.nextSkillTickCount = 0;
+			return false;
+		}
 		return super.canContinueToUse() && this.canContinueToUse;
 	}
 	

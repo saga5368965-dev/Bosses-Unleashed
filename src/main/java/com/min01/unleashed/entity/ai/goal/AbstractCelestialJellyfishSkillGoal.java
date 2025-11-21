@@ -29,16 +29,6 @@ public abstract class AbstractCelestialJellyfishSkillGoal extends BasicAnimation
 	}
 	
 	@Override
-	public boolean canContinueToUse()
-	{
-		if(this.mob.getTarget() == null || !this.mob.getTarget().isAlive() || !this.mob.isAlive())
-		{
-			return false;
-		}
-		return super.canContinueToUse();
-	}
-	
-	@Override
 	public void stop() 
 	{
 		super.stop();

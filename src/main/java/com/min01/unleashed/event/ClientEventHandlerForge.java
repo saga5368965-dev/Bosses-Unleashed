@@ -10,17 +10,21 @@ import com.min01.unleashed.entity.EntityCameraShake;
 import com.min01.unleashed.misc.UnleashedBossBarType;
 import com.min01.unleashed.shader.UnleashedShaderEffects;
 import com.min01.unleashed.util.UnleashedClientUtil;
+import com.min01.unleashed.util.UnleashedUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -60,6 +64,20 @@ public class ClientEventHandlerForge
             event.setYaw((float)(event.getYaw() + shakeAmplitude * Math.cos(ticksExistedDelta * 5.0F + 1.0F) * 25.0));
             event.setRoll((float)(event.getRoll() + shakeAmplitude * Math.cos(ticksExistedDelta * 4.0F) * 25.0));
         }
+    }
+    
+    @SubscribeEvent
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) 
+    {
+    	Player player = event.getEntity();
+    	if(UnleashedUtil.isDash(player))
+    	{
+    		PoseStack stack = event.getPoseStack();
+    		float yRot = Mth.rotLerp(event.getPartialTick(), player.yBodyRotO, player.yBodyRot);
+    		stack.mulPose(Axis.YP.rotationDegrees(180.0F - yRot));
+    		stack.mulPose(Axis.XP.rotationDegrees(-90.0F - player.getXRot()));
+    		stack.mulPose(Axis.YP.rotationDegrees((player.tickCount + event.getPartialTick()) * -75.0F));
+    	}
     }
     
     @SubscribeEvent

@@ -7,19 +7,14 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.min01.unleashed.entity.EntityCameraShake;
 import com.min01.unleashed.misc.UnleashedArmPoses;
-import com.min01.unleashed.shader.UnleashedShaderEffects;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel.ArmPose;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -35,17 +30,14 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
-public class CelestialJellyfishUmbrellaItem extends SwordItem implements IShaderEffectItem
+public class CelestialJellyfishUmbrellaItem extends SwordItem
 {
 	public final Multimap<Attribute, AttributeModifier> attributeModifiers;
 	
@@ -106,8 +98,6 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem implements IShader
 		{
 			if(isUnfolded)
 			{
-				p_41433_.startUsingItem(p_41434_);
-				p_41432_.playSound(p_41433_, p_41433_.getX(), p_41433_.getY(), p_41433_.getZ(), UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), p_41433_.getSoundSource(), 1.0F, 1.0F);
 				return InteractionResultHolder.consume(stack);
 			}
 			else
@@ -126,30 +116,7 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem implements IShader
 	@Override
 	public void onStopUsing(ItemStack stack, LivingEntity entity, int count) 
 	{
-		if(this.getUseDuration(stack) - entity.getUseItemRemainingTicks() >= this.getUseDuration(stack))
-		{
-			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(entity.getXRot(), entity.getYHeadRot()), entity.position(), 0, 0, 500.0F);
-			HitResult result = entity.level.clip(new ClipContext(entity.position(), lookPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
-			if(result instanceof BlockHitResult blockHit)
-			{
-				if(blockHit.getType() != HitResult.Type.MISS)
-				{
-					BlockPos blockPos = blockHit.getBlockPos().above();
-					entity.moveTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-				}
-			}
-			UnleashedShaderEffects.addEffect(entity.level, "Shockwave", entity.position(), 100, 1.0F);
-			EntityCameraShake.cameraShake(entity.level, entity.position(), 100.0F, 0.1F, 0, 20);
-			entity.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get());
-			if(entity instanceof Player player)
-			{
-				player.getCooldowns().addCooldown(this, 60);
-			}
-		}
-		if(entity instanceof ServerPlayer player)
-		{
-			player.connection.send(new ClientboundStopSoundPacket(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get().getLocation(), player.getSoundSource()));
-		}
+		
 	}
 	
 	@Override
@@ -175,30 +142,6 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem implements IShader
 	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) 
 	{
 		return super.canPerformAction(stack, toolAction) && toolAction != ToolActions.SWORD_SWEEP;
-	}
-	
-	@Override
-	public boolean shouldApplyEffect(LivingEntity entity, ItemStack stack) 
-	{
-		return entity.isUsingItem() && entity.getUseItem().getItem() == this && isUnfolded(stack);
-	}
-	
-	@Override
-	public String getEffetName(LivingEntity entity, ItemStack stack) 
-	{
-		return "Galaxy";
-	}
-	
-	@Override
-	public float getEffectScale(LivingEntity entity, ItemStack stack) 
-	{
-		return Math.min(this.getUseDuration(stack) - entity.getUseItemRemainingTicks(), 100);
-	}
-	
-	@Override
-	public int getEffectTickCount(LivingEntity entity, ItemStack stack) 
-	{
-		return Math.min(this.getUseDuration(stack) - entity.getUseItemRemainingTicks(), 100);
 	}
 	
 	@Override
