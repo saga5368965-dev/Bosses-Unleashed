@@ -8,6 +8,7 @@ import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -86,6 +87,10 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 			this.mob.setDeltaMovement(Vec3.ZERO);
 			if(this.mob.isMove())
 			{
+				if(this.mob.getTarget() != null)
+				{
+					this.mob.lookAt(Anchor.EYES, this.mob.getTarget().getEyePosition());
+				}
 				if(this.dashCount >= 5)
 				{
 					if(this.mob.isClone())
@@ -95,7 +100,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 					else
 					{
 						this.mob.setHitTime(true);
-						this.mob.setHitTime(160);
+						this.mob.setHitTime(200);
 					}
 				}
 				else
