@@ -76,10 +76,10 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 					this.dir = 1;
 					this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
 				}
-				for(float i = 11.25F; i <= 360; i += 11.25F)
+				for(float i = 22.5F; i <= 360; i += 22.5F)
 				{
 					int dir = 1;
-					float index = i / 11.25F;
+					float index = i / 22.5F;
 					if(index % 2 == 0)
 					{
 						dir = -1;

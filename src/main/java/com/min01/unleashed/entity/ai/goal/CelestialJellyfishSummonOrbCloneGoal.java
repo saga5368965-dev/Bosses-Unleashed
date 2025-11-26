@@ -55,6 +55,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 			jellyfish.setDeltaMovement(UnleashedUtil.fromToVector(this.mob.position(), lookPos, 0.2F));
 			jellyfish.goal = CelestialJellyfishCloneShootOrbGoal.class;
 			jellyfish.setOwner(this.mob);
+			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
 		}
 		if(this.cloneTick == 0)

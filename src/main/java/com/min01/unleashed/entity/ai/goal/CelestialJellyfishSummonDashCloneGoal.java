@@ -53,6 +53,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
 			jellyfish.setDeltaMovement(UnleashedUtil.fromToVector(this.mob.position(), lookPos, 0.2F));
 			jellyfish.goal = CelestialJellyfishCloneDashGoal.class;
+			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
 		}
 		if(this.cloneTick == 0)

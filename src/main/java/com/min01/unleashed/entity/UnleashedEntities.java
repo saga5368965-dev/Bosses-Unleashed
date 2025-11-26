@@ -17,9 +17,9 @@ public class UnleashedEntities
 {
 	public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BossesUnleashed.MODID);
 
-	public static final RegistryObject<EntityType<EntityCelestialJellyfish>> CELESTIAL_JELLYFISH = registerEntity("celestial_jellyfish", createBuilder(EntityCelestialJellyfish::new, MobCategory.MONSTER).sized(0.875F, 0.5F).clientTrackingRange(100));
+	public static final RegistryObject<EntityType<EntityCelestialJellyfish>> CELESTIAL_JELLYFISH = registerEntity("celestial_jellyfish", createBuilder(EntityCelestialJellyfish::new, MobCategory.MONSTER).sized(0.875F, 0.5F).fireImmune().clientTrackingRange(100));
 	
-	public static final RegistryObject<EntityType<EntityCelestialOrb>> CELESTIAL_ORB = registerEntity("celestial_orb", createBuilder(EntityCelestialOrb::new, MobCategory.MISC).sized(1.25F, 1.25F).clientTrackingRange(100));
+	public static final RegistryObject<EntityType<EntityCelestialOrb>> CELESTIAL_ORB = registerEntity("celestial_orb", createBuilder(EntityCelestialOrb::new, MobCategory.MISC).fireImmune().sized(1.25F, 1.25F).clientTrackingRange(100));
 	public static final RegistryObject<EntityType<EntityCelestialBeam>> CELESTIAL_BEAM = registerEntity("celestial_beam", createBuilder(EntityCelestialBeam::new, MobCategory.MISC).sized(0.1F, 0.1F).updateInterval(1));
 	public static final RegistryObject<EntityType<EntityCameraShake>> CAMERA_SHAKE = registerEntity("camera_shake", EntityType.Builder.<EntityCameraShake>of(EntityCameraShake::new, MobCategory.MISC).sized(0.0F, 0.0F));
 	public static final RegistryObject<EntityType<EntityWormhole>> WORMHOLE = registerEntity("wormhole", createBuilder(EntityWormhole::new, MobCategory.MISC).sized(3.0F, 3.0F).clientTrackingRange(100));

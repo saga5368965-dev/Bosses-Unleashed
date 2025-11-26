@@ -113,6 +113,12 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 		}
 	}
 	
+	@Override
+	public boolean displayFireAnimation() 
+	{
+		return false;
+	}
+	
 	public boolean canExplode(Entity entity)
 	{
 		if(this.getOwner() != null)
